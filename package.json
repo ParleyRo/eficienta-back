@@ -1,0 +1,20 @@
+{
+  "name": "eficienta-server",
+  "version": "1.0.0",
+  "description": "",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "fastify": "^3.29.0",
+    "fastify-cors": "^6.1.0",
+    "mongodb": "^4.6.0",
+    "node-fetch": "^3.2.5",
+    "nodemon": "^2.0.16",
+    "xml2js": "^0.4.23"
+  },
+  "type": "module"
+}
