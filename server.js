@@ -24,7 +24,7 @@ fastify.register(
 const DB = new Database('efficiency');
 // Declare a route
 fastify.get('/user/:secret', async (req, reply) => {
-2
+
 	const dbCollection = await DB.connect('users');
 
 	const findResult = await dbCollection.find({secret: req.params.secret}).toArray();
@@ -48,6 +48,27 @@ fastify.post('/save', async (req, reply) => {
 	const insertResult = await dbCollection.updateOne({secret: params.secret},{$set: params},{upsert: true});
 
 	console.log('Inserted documents =>', insertResult);
+	
+	return {success: 1}
+});
+
+fastify.delete('/delete', async (req, reply) => {
+
+	const params = req.body;
+
+	const dbCollection = await DB.connect('users');
+
+	//const findResult = await dbCollection.find({ secret: params.secret,[`invoices.${params.year}.${params.month}`]: { $exists: true } }).toArray();
+	const deleteResult = await dbCollection.updateOne(
+	{
+		secret: params.secret
+	}, {
+		$unset: {
+			[`invoices.${params.year}.${params.month}`]:""
+		}
+	})
+	
+	console.log('Delete document =>', deleteResult);
 	
 	return {success: 1}
 });
@@ -139,7 +160,7 @@ fastify.get('/cursbnr', async (req, reply) => {
 
 
 // Run the server!
-fastify.listen(5001, '0.0.0.0', (err, address) => {
+fastify.listen(6000, '0.0.0.0', (err, address) => {
   if (err) throw err
   fastify.log.info(`server listening on ${address}`)
 })
