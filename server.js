@@ -80,15 +80,7 @@ fastify.get('/cursbnr', async (req, reply) => {
 
 	const params = req.query;
 
-	const date = new Date(parseInt(params.y),parseInt(params.m)-1,parseInt(params.d),12)
-
-	// if(Object.entries(params).length && params['y'] != null && params['m'] != null && params['d'] != null){
-		
-	// 	date.setFullYear(parseInt(params['y']));
-	// 	date.setMonth((parseInt(params['m'])+12)%12-1);
-	// 	date.setDate(parseInt(params['d']));
-
-	// }
+	const date = new Date(parseInt(params.y),parseInt(params.m)-1,parseInt(params.d),12);
 
 	try {
 		
