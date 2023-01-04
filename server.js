@@ -156,7 +156,7 @@ fastify.get('/cursbnr', async (req, reply) => {
 
 
 // Run the server!
-fastify.listen(5001, '0.0.0.0', (err, address) => {
+fastify.listen(3001, '0.0.0.0', (err, address) => {
   if (err) throw err
   fastify.log.info(`server listening on ${address}`)
 })
