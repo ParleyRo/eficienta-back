@@ -14,8 +14,8 @@ const fastify = Fastify({
 fastify.register(
 	FastifyCors, 
 	{ 
-		origin: ['http://parley.go.ro:5000','http://localhost:5000']
-		//origi: '*'
+		origin: ['http://parley.go.ro:5000','http://localhost:5000','http://116.203.129.108:3000']
+		// origin: '*'
 	}
 )
 
