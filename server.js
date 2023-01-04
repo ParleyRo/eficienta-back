@@ -14,12 +14,18 @@ const fastify = Fastify({
 fastify.register(
 	FastifyCors, 
 	{ 
-		origin: ['http://parley.go.ro:5001', 'http://localhost:5001']
-	//origi: '*'
+		origin: ['http://parley.go.ro:5000','http://localhost:5000']
+		//origi: '*'
 	}
 )
 
+fastify.get('/', async (req, reply) => {
 
+	return {
+		success: 1
+	}
+
+});
 
 const DB = new Database('efficiency');
 // Declare a route
@@ -28,9 +34,7 @@ fastify.get('/user/:secret', async (req, reply) => {
 	const dbCollection = await DB.connect('users');
 
 	const findResult = await dbCollection.find({secret: req.params.secret}).toArray();
-	
-	console.log('Found documents =>', findResult);
-	
+		
 	if(!findResult.length){
 		return {error: 1}
 	}
@@ -58,7 +62,6 @@ fastify.delete('/delete', async (req, reply) => {
 
 	const dbCollection = await DB.connect('users');
 
-	//const findResult = await dbCollection.find({ secret: params.secret,[`invoices.${params.year}.${params.month}`]: { $exists: true } }).toArray();
 	const deleteResult = await dbCollection.updateOne(
 	{
 		secret: params.secret
@@ -77,15 +80,16 @@ fastify.get('/cursbnr', async (req, reply) => {
 
 	const params = req.query;
 
-	const date = new Date()
+	const date = new Date(parseInt(params.y),parseInt(params.m)-1,parseInt(params.d),12)
 
-	if(Object.entries(params).length && params['y'] != null && params['m'] != null && params['d'] != null){
+	// if(Object.entries(params).length && params['y'] != null && params['m'] != null && params['d'] != null){
 		
-		date.setFullYear(parseInt(params['y']));
-		date.setMonth((parseInt(params['m'])+12)%12-1);
-		date.setDate(parseInt(params['d']));
+	// 	date.setFullYear(parseInt(params['y']));
+	// 	date.setMonth((parseInt(params['m'])+12)%12-1);
+	// 	date.setDate(parseInt(params['d']));
 
-	}
+	// }
+
 	try {
 		
 		const dbCollection = await DB.connect('rates');
@@ -97,7 +101,7 @@ fastify.get('/cursbnr', async (req, reply) => {
 		}
 
 		const res = await fetch(
-			`https://www.bnr.ro/files/xml/years/nbrfxrates${date.getFullYear()}.xml`,
+			`https://www.bnr.ro/nbrfxrates10days.xml`,
 			{
 				method: 'GET'
 			}
@@ -119,7 +123,7 @@ fastify.get('/cursbnr', async (req, reply) => {
 		let iterateDate = new Date(date)
 
 		while(!rateDay.length){
-			
+
 			rateDay = oCursBnr.DataSet.Body[0].Cube.filter(days => {
 				return days['$']?.date === `${iterateDate.getFullYear()}-${('0'+(iterateDate.getMonth()+1)).slice(-2)}-${('0'+iterateDate.getDate()).slice(-2)}`;
 			});
@@ -160,7 +164,7 @@ fastify.get('/cursbnr', async (req, reply) => {
 
 
 // Run the server!
-fastify.listen(6000, '0.0.0.0', (err, address) => {
+fastify.listen(5001, '0.0.0.0', (err, address) => {
   if (err) throw err
   fastify.log.info(`server listening on ${address}`)
 })
